@@ -63,5 +63,6 @@ char * recibe_paquete(int sockfd, struct sockaddr_in server_addr)
  */
 void end_server(int sig) {
 	printf("(server)Capturo Ctrl+C, adios!\n");
+	remove_bbdd();
 	exit(1);
 }

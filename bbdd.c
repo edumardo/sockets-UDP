@@ -149,3 +149,13 @@ void imprime_bbdd()
 		aux = aux->sgte;
 	}
 }
+/******************************************************************************/
+/**
+ * Remove the database, free the memory.
+ */
+int remove_bbdd()
+{
+	printf("Time to remove the db, bye!\n");
+	return 0;
+}
+

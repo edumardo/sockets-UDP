@@ -30,5 +30,6 @@ int inserta_registro(char * id, unsigned short puerto, unsigned long ip);
 int consulta_registro(char * id, unsigned short * puerto, unsigned long * ip);
 int elimina_registro(char * id);
 void imprime_bbdd();
+int remove_bbdd();
 /******************************************************************************/
 #endif
