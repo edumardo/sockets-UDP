@@ -64,11 +64,11 @@ int main(int argc, char *argv[])
 
 		/* Recibimos un paquete del cliente */
 		if ((numbytes = recvfrom(sockfd, 
-														buffer, 
-														MAXBUFLEN-1, 
-														0, 
-														(struct sockaddr *) &cliente_addr, 
-														&addr_len)) == -1) {
+					buffer, 
+					MAXBUFLEN-1, 
+					0, 
+					(struct sockaddr *) &cliente_addr, 
+					&addr_len)) == -1) {
 			perror("(servidor) recvfrom");
 			exit(1);
 		}
