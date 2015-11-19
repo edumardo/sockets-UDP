@@ -1,7 +1,7 @@
 CC = gcc 
 BINCLIENT = client
 BINSERVER = server
-OBJS = $(BIN:=.o) cliente_func.o  bbdd.o common.o
+OBJS = $(BINCLIENT:=.o) $(BINSERVER:=.o) cliente_func.o  bbdd.o common.o
 
 CFLAGS = -g -O2 -Wall -pedantic -ansi -w
 
