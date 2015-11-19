@@ -1,5 +1,5 @@
 # sockets-UDP
-###Client-server model example with UDP sockets in C programming languaje.
+Client-server model example with UDP sockets in C programming languaje.
 
 
 ###Basic usage (only linux)
