@@ -15,6 +15,10 @@ int main(int argc, char *argv[])
 	/* ./cliente ip-servidor operacion */
 	if (argc != 3) {
 		printf("uso: cliente ip-servidor operacion\n");
+		printf("operacion: \n");
+		printf("\t1 - Crear una nueva entrada en el registro\n");
+		printf("\t2 - Consultar una entrada del registro\n");
+		printf("\t3 - Eliminar una entrada del registro\n");
 		exit(1);
 	}
 
