@@ -10,18 +10,18 @@
 #include <string.h>
 #include <stdio.h>
 /******************************************************************************/
-#define MAXSIZE 				256
+#define MAXSIZE 			256
 #define MAXBUFLEN 			264
 #define PORT_SERVER			2222
 #define PORT_CLIENTE		12344
-#define VERSION 				0x01
+#define VERSION 			0x01
 
 #define OP_NUEVO_REG		0x01
-#define OP_CONSULTA_REG	0x02
+#define OP_CONSULTA_REG		0x02
 #define OP_ELIM_REG			0x03
 
-#define OP_OK 					0x00
-#define OP_KO						0x01
+#define OP_OK 				0x00
+#define OP_KO				0x01
 /******************************************************************************/
 struct nuevo_registro		/* 1 + 1 + 2 + 4 + 256 = 264 bytes */
 {
