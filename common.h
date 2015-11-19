@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <stdio.h>
+#include <signal.h>
 /******************************************************************************/
 #define MAXSIZE 			256
 #define MAXBUFLEN 			264
@@ -32,7 +33,7 @@ struct nuevo_registro		/* 1 + 1 + 2 + 4 + 256 = 264 bytes */
 	char id[MAXSIZE];
 } __attribute__((packed));
 
-struct respuesta				/* 1 + 1 + 256 = 258 bytes */
+struct respuesta			/* 1 + 1 + 256 = 258 bytes */
 {
 	char version;
 	char op;
@@ -49,5 +50,6 @@ struct resp_consulta		/* 1 + 1 + 2 + 4 = 8 bytes */
 /******************************************************************************/
 int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, int len);
 char * recibe_paquete(int sockfd, struct sockaddr_in server_addr);
+void end_server(int sig);
 /******************************************************************************/
 #endif

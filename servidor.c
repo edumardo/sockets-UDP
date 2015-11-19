@@ -33,6 +33,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	
+	/* catch SIGINT signal to avoid exit without free memory */
+	signal(SIGINT, end_server);
+	
 	/* Creamos el socket */
 	if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1) {
 		perror("(servidor) error al crear el socket");

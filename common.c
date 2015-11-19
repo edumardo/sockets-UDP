@@ -56,3 +56,12 @@ char * recibe_paquete(int sockfd, struct sockaddr_in server_addr)
 	buffer[numbytes] = '\0';
 	return buffer;
 }
+/******************************************************************************/
+/**
+ *
+ *
+ */
+void end_server(int sig) {
+	printf("(server)Capturo Ctrl+C, adios!\n");
+	exit(1);
+}
