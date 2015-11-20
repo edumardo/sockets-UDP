@@ -1,8 +1,8 @@
 /***
  *
  */
-#ifndef __CLIENTE_FUNC_H
-#define __CLIENTE_FUNC_H
+#ifndef __CLIENT_FUNC_H
+#define __CLIENT_FUNC_H
 /******************************************************************************/
 #include <stdlib.h>
 #include <arpa/inet.h>

@@ -1,8 +1,8 @@
 /***
  *
  */
-#ifndef __BBDD_H
-#define __BBDD_H
+#ifndef __DATABASE_H
+#define __DATABASE_H
 /******************************************************************************/
 #include <stdlib.h>
 #include <stdio.h> 

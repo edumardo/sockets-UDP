@@ -1,7 +1,7 @@
 /***
  *
  */
-#include "cliente_func.h"
+#include "client_func.h"
 /******************************************************************************/
 int main(int argc, char *argv[])
 {
