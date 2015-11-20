@@ -1,4 +1,3 @@
-CC = gcc 
 BINCLIENT = client
 BINSERVER = server
 OBJS = $(BINCLIENT:=.o) $(BINSERVER:=.o) cliente_func.o  bbdd.o common.o
