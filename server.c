@@ -11,14 +11,14 @@ int main(int argc, char *argv[])
 	struct sockaddr_in cliente_addr;
 	socklen_t addr_len;
 
-	struct respuesta * paquete;		/* paquete generico que recibe el servidor */
-	struct respuesta resp;			/* paquete de respuesta */
+	struct respuesta * paquete;			/* paquete generico que recibe el servidor */
+	struct respuesta resp;				/* paquete de respuesta */
 	struct respuesta * elim_reg;		/* paquete de elimina registro */
 	struct nuevo_registro * nuevo_reg;	/* paquete de nuevo registro */
 	struct respuesta * consulta_reg;	/* paquete de consulta registro */
 	struct resp_consulta resp_con;		/* respuesta a consulta registro */
 
-	struct in_addr dir;			/* Para pasar ip de ulong a formato punto */
+	struct in_addr dir;					/* Para pasar ip de ulong a formato punto */
 
 	char buffer[MAXBUFLEN];
 	int numbytes;
