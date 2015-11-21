@@ -6,14 +6,14 @@
 struct database * db;
 /******************************************************************************/
 /**
- * Crea la estructura para la base de datos.
- * @return 0 si todo fue bien, -1 si no se pudo reservar memoria.
+ * Initialize database.
+ * @return 0 if everything is ok, -1 otherwise.
  */
 int init_database()
 {
 	db = (struct database *) malloc(sizeof(struct database));
 	if (db == NULL) {
-		fprintf(stderr, "(database) fallo al reservar memoria\n");
+		fprintf(stderr, "(database) fail to allocate memory for the database\n");
 		return -1;
 	}
 
@@ -26,7 +26,7 @@ int init_database()
 /**
  * Insert a new record in the database.
  * @param id: identifier of the record.
- * @param puerto: client port.
+ * @param port: client port.
  * @param ip: client ip.
  * @return 0 if everything is ok, -1 otherwise.
  */
@@ -37,7 +37,7 @@ int insert_record(char * id, unsigned short port, unsigned long ip)
 	
 	new_node = (struct node *) malloc(sizeof(struct node));
 	if (new_node == NULL) {
-		fprintf(stderr, "(database) fail to allocate memory for new node\n");
+		fprintf(stderr, "(database) fail to allocate memory for the new node\n");
 		return -1;
 	}
 	
@@ -73,11 +73,11 @@ int insert_record(char * id, unsigned short port, unsigned long ip)
 }
 /******************************************************************************/
 /**
- * Consulta un registro en la base de datos.
- * @param id: identificador del registro.
- * @param puerto: puerto de la maquina que registro el registro, toma su valor al finalizar la funcion.
- * @param ip: direccion ip de la maquina que registro el registro, toma su valor al finalizar la funcion.
- * @return 0 si todo fue bien, -1 si no se encuentra el registro en la base de datos.
+ * Consult a record in the database.
+ * @param id: identifier of the record, take value after the call.
+ * @param port: client port, take value after the call.
+ * @param ip: client ip.
+ * @return 0 if everything is ok, -1 otherwise.
  */
 int consult_record(char * id, unsigned short * port, unsigned long * ip)
 {
@@ -98,9 +98,9 @@ int consult_record(char * id, unsigned short * port, unsigned long * ip)
 }
 /******************************************************************************/
 /**
- * Elimina un registro en la base de datos.
- * @param id: identificador del registro.
- * @return 0 si todo fue bien, -1 si no se encuentra el registro en la base de datos.
+ * Delete a record of the database.
+ * @param id: identifier of the record.
+ * @return 0 if everything is ok, -1 otherwise.
  */
 int delete_record(char * id)
 {
@@ -132,7 +132,7 @@ int delete_record(char * id)
 }
 /******************************************************************************/
 /**
- * Imprime el contenido de la base de datos.
+ * Print database.
  */
 void print_database()
 {
@@ -141,10 +141,10 @@ void print_database()
 	struct in_addr dir;
 
 	aux = db->first;
-	printf("Numero de nodos: %d\n", db->n_nodes);
+	printf("Number of nodes: %d\n", db->n_nodes);
 	while (aux) {
 		printf("\tid: %s\n", aux->id);
-		printf("\tpuerto: %d\n", aux->port);
+		printf("\tport: %d\n", aux->port);
 		dir.s_addr = aux->ip;
 		printf("\tip: %s\n\n", inet_ntoa(dir));
 		aux = aux->next;
@@ -152,7 +152,7 @@ void print_database()
 }
 /******************************************************************************/
 /**
- * Remove the database, free the memory.
+ * Delete the database, free the memory.
  */
 void delete_database()
 {
