@@ -20,7 +20,7 @@ $ ./client <ip-server> <operation> [id]
     3. remove record from the server	
 - id: record to manipulate.
 
-Example, inserte record miRecor123:
+Example, inserte record miRecord123:
 ```sh
 $ ./client 1.2.3.4 1 miRecord123
 ```
