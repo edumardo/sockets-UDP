@@ -24,54 +24,51 @@ int init_database()
 }
 /******************************************************************************/
 /**
- * Inserta un registro en la base de datos.
- * @param id: identificador del registro.
- * @param puerto: puerto de la maquina que registra el registro.
- * @param ip: direccion ip de la maquina que registra el registro.
- * @return 0 si todo fue bien, -1 si no se pudo reservar memoria, -2 si el registro ya está en la base de datos.
+ * Insert a new record in the database.
+ * @param id: identifier of the record.
+ * @param puerto: client port.
+ * @param ip: client ip.
+ * @return 0 if everything is ok, -1 otherwise.
  */
 int insert_record(char * id, unsigned short port, unsigned long ip)
 {
-	struct node * nuevo;
-	struct node * aux;
-
-	/* La base de datos está vacia */
-	if (db->n_nodes == 0) {
-		db->first = (struct node *) malloc(sizeof(struct node));
-		if (db->first == NULL) {
-			fprintf(stderr, "(database) fallo al reservar memoria\n");
-			return -1;
-		}
-
-		db->first->id = strdup(id);
-		db->first->port = port;
-		db->first->ip = ip;
+	struct node * new_node;
+	struct node * aux_node;
+	
+	new_node = (struct node *) malloc(sizeof(struct node));
+	if (new_node == NULL) {
+		fprintf(stderr, "(database) fail to allocate memory for new node\n");
+		return -1;
+	}
+	
+	new_node->id = strdup(id);
+	new_node->port = port;
+	new_node->ip = ip;
+	
+	/* Database is empty */
+	if (db->n_nodes == 0){
+		db->first = new_node;
 		db->first->next = NULL;
+		db->n_nodes++;
 	}
-
-	/* Insertamos el registro en la primera posicion de la lista */
+	/* Insert in the first place */
 	else {
-		/* Si el registro ya existe, no lo insertamos */
-		aux = db->first;
-		while(aux) {
-			if (strcmp(aux->id, id) == 0)
-				return -2;
-			aux = aux->next;
+		/* check if is already in database */
+		aux_node = db->first;
+		while (aux_node) {
+			if (strcmp(aux_node->id, id) == 0){
+				free(new_node->id);
+				free(new_node);
+				return -1;
+			}
+			aux_node = aux_node->next;
 		}
-
-		nuevo = (struct node *) malloc(sizeof(struct node));
-		if (nuevo == NULL) {
-			fprintf(stderr, "(database) fallo al reservar memoria\n");
-			return -1;
-		}
-		nuevo->id = strdup(id);
-		nuevo->port = port;
-		nuevo->ip = ip;
-		nuevo->next = db->first;
-		db->first = nuevo;
+		
+		new_node->next = db->first;
+		db->first = new_node;
+		db->n_nodes++;
 	}
-	db->n_nodes++;
-
+	
 	return 0;
 }
 /******************************************************************************/
