@@ -5,16 +5,22 @@ Compile the code:
 ```sh
 $ make
 ```
-run the server:
+Run the server:
 ```sh
 $ ./server
 ```
-run the clients:
+Run the clients:
 ```sh
-$ ./client <ip-server> <operation>
+$ ./client <ip-server> <operation> [id]
 ```
 - ip-server: ip of the server
 - operation:
     1. add new record into the registry
     2. read record from the server
     3. remove record from the server	
+- id: record to manipulate.
+
+Example, inserte record miRecor123:
+```sh
+$ ./client 1.2.3.4 1 miRecord123
+```
