@@ -11,7 +11,7 @@ struct database * db;
  */
 int init_database()
 {
-	db = (struct database *) malloc(sizeof(struct database *));
+	db = (struct database *) malloc(sizeof(struct database));
 	if (db == NULL) {
 		fprintf(stderr, "(database) fallo al reservar memoria\n");
 		return -1;
@@ -37,7 +37,7 @@ int insert_record(char * id, unsigned short port, unsigned long ip)
 
 	/* La base de datos está vacia */
 	if (db->n_nodes == 0) {
-		db->first = (struct node *) malloc(sizeof(struct node *));
+		db->first = (struct node *) malloc(sizeof(struct node));
 		if (db->first == NULL) {
 			fprintf(stderr, "(database) fallo al reservar memoria\n");
 			return -1;
@@ -59,7 +59,7 @@ int insert_record(char * id, unsigned short port, unsigned long ip)
 			aux = aux->next;
 		}
 
-		nuevo = (struct node *) malloc(sizeof(struct node *));
+		nuevo = (struct node *) malloc(sizeof(struct node));
 		if (nuevo == NULL) {
 			fprintf(stderr, "(database) fallo al reservar memoria\n");
 			return -1;
@@ -115,11 +115,15 @@ int delete_record(char * id)
 			if (aux == db->first) {
 				db->first = db->first->next;
 				db->n_nodes--;
+				free(aux->id);
+				free(aux);
 				return 0;
 			}
 			else {
 				ant->next = aux->next;
 				db->n_nodes--;
+				free(aux->id);
+				free(aux);
 				return 0;
 			}
 		}
@@ -153,9 +157,23 @@ void print_database()
 /**
  * Remove the database, free the memory.
  */
-int delete_database()
+void delete_database()
 {
-	printf("Time to remove the db, bye!\n");
-	return 0;
+	struct node * to_delete;
+	struct node * temp;
+	int i;
+	
+	temp = db->first;
+	i = 0;
+	while (temp) {
+		i++;
+		to_delete = temp;
+		temp = temp->next;
+		free(to_delete->id);
+		free(to_delete);
+	}
+	
+	free(db);
+	printf("(database) deleted %d records\n", i);
 }
 

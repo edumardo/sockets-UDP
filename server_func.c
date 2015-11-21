@@ -5,8 +5,9 @@
  *
  */
 void end_server(int sig) {
-	printf("(server)Capturo Ctrl+C, adios!\n");
-	/*remove_bbdd();*/
-	exit(1);
+	printf("\n");
+	delete_database();
+	printf("(server) Time to say goodbye!, signal received: %d\n", sig);
+	exit(0);
 }
 

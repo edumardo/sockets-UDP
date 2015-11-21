@@ -37,7 +37,7 @@ int insert_record(char * id, unsigned short port, unsigned long ip);
 int consult_record(char * id, unsigned short * port, unsigned long * ip);
 int delete_record(char * id);
 void print_database();
-int delete_database();
+void delete_database();
 
 /******************************************************************************/
 #endif
