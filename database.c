@@ -153,7 +153,7 @@ void print_database()
 /**
  * Remove the database, free the memory.
  */
-int remove_db()
+int delete_database()
 {
 	printf("Time to remove the db, bye!\n");
 	return 0;
