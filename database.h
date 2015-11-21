@@ -11,25 +11,33 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 /******************************************************************************/
-struct nodo
+struct node
 {
-	struct nodo * sgte;
+	struct node * next;
 	char * id;
-	unsigned short puerto;
+	unsigned short port;
 	unsigned long ip;
 };
 
-struct base_datos
+struct database /* old base_datos */
 {
-	int nnodos;
-	struct nodo * primero;
+	int n_nodes;
+	struct node * first;
 };
 /******************************************************************************/
-int crea_bbdd();
+/*int crea_bbdd();
 int inserta_registro(char * id, unsigned short puerto, unsigned long ip);
 int consulta_registro(char * id, unsigned short * puerto, unsigned long * ip);
 int elimina_registro(char * id);
 void imprime_bbdd();
-int remove_bbdd();
+int remove_bbdd();*/
+
+int init_database();
+int insert_record(char * id, unsigned short port, unsigned long ip);
+int consult_record(char * id, unsigned short * port, unsigned long * ip);
+int delete_record(char * id);
+void print_database();
+int delete_database();
+
 /******************************************************************************/
 #endif
