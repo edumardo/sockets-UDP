@@ -2,6 +2,8 @@
  *
  */
 #include "common.h"
+#include "server_func.h"
+#include <signal.h>
 /******************************************************************************/
 
 int main(int argc, char *argv[])
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
 	unsigned long ip;
 
 	/* Creamos la estructura de la base de datos */
-	if (crea_bbdd() == -1) {
+	if (init_database() == -1) {
 		fprintf(stderr, "(servidor) error al crear la base de datos");
 		exit(1);
 	}
@@ -102,7 +104,7 @@ int main(int argc, char *argv[])
 				printf("(servidor) Insertar nuevo registro en la base de datos\n");
 				printf("\t\tidentificador: %s\n\t\tpuerto: %d\n\t\tdireccion: %s\n\n", nuevo_reg->id, ntohs(nuevo_reg->puerto), inet_ntoa(dir));
 
-				if ((status = inserta_registro(nuevo_reg->id, ntohs(nuevo_reg->puerto), nuevo_reg->ip)) != 0) {
+				if ((status = insert_record(nuevo_reg->id, ntohs(nuevo_reg->puerto), nuevo_reg->ip)) != 0) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
 				
@@ -137,7 +139,7 @@ int main(int argc, char *argv[])
 				printf("(servidor) Consultar registro de la base de datos\n");
 				printf("\t\tidentificador: %s\n\n", consulta_reg->mensaje);
 
-				if (consulta_registro(consulta_reg->mensaje, &puerto, &ip) == -1) {
+				if (consult_record(consulta_reg->mensaje, &puerto, &ip) == -1) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
 					strcpy(resp.mensaje, "El registro no existe");
@@ -169,7 +171,7 @@ int main(int argc, char *argv[])
 				printf("(servidor) Eliminar registro de la base de datos\n");
 				printf("\t\tidentificador: %s\n\n", elim_reg->mensaje);
 
-				if (elimina_registro(elim_reg->mensaje) == -1) {
+				if (delete_record(elim_reg->mensaje) == -1) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
 					strcpy(resp.mensaje, "El registro no existe");
