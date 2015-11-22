@@ -1,6 +1,6 @@
 BINCLIENT = client
 BINSERVER = server
-OBJS = $(BINCLIENT:=.o) $(BINSERVER:=.o) client_func.o  database.o common.o
+OBJS = $(BINCLIENT:=.o) $(BINSERVER:=.o) client_func.o server_func.o database.o common.o
 
 CFLAGS = -g -O2 -Wall -pedantic -ansi -w
 
@@ -10,7 +10,7 @@ client:
 	$(CC) $(CFLAGS) -o $(BINCLIENT) client.c client_func.c common.c
 
 server:
-	$(CC) $(CFLAGS) -o $(BINSERVER) server.c database.c common.c
+	$(CC) $(CFLAGS) -o $(BINSERVER) server.c server_func.c database.c common.c
 
 clean:	
 	rm -rf *.log core *~ $(OBJS) $(BINCLIENT) $(BINSERVER)

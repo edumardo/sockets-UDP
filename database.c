@@ -3,159 +3,175 @@
  */
 #include "database.h"
 /******************************************************************************/
-struct base_datos * bbdd;
+struct database * db;
 /******************************************************************************/
 /**
- * Crea la estructura para la base de datos.
- * @return 0 si todo fue bien, -1 si no se pudo reservar memoria.
+ * Initialize database.
+ * @return 0 if everything is ok, -1 otherwise.
  */
-int crea_bbdd()
+int init_database()
 {
-	bbdd = (struct base_datos *) malloc(sizeof(struct base_datos *));
-	if (bbdd == NULL) {
-		fprintf(stderr, "(bbdd) fallo al reservar memoria\n");
+	db = (struct database *) malloc(sizeof(struct database));
+	if (db == NULL) {
+		fprintf(stderr, "(database) fail to allocate memory for the database\n");
 		return -1;
 	}
 
-	bbdd->nnodos = 0;
-	bbdd->primero = NULL;
+	db->n_nodes = 0;
+	db->first = NULL;
 
 	return 0;
 }
 /******************************************************************************/
 /**
- * Inserta un registro en la base de datos.
- * @param id: identificador del registro.
- * @param puerto: puerto de la maquina que registra el registro.
- * @param ip: direccion ip de la maquina que registra el registro.
- * @return 0 si todo fue bien, -1 si no se pudo reservar memoria, -2 si el registro ya está en la base de datos.
+ * Insert a new record in the database.
+ * @param id: identifier of the record.
+ * @param port: client port.
+ * @param ip: client ip.
+ * @return 0 if everything is ok, -1 otherwise.
  */
-int inserta_registro(char * id, unsigned short puerto, unsigned long ip)
+int insert_record(char * id, unsigned short port, unsigned long ip)
 {
-	struct nodo * nuevo;
-	struct nodo * aux;
-
-	/* La base de datos está vacia */
-	if (bbdd->nnodos == 0) {
-		bbdd->primero = (struct nodo *) malloc(sizeof(struct nodo *));
-		if (bbdd->primero == NULL) {
-			fprintf(stderr, "(bbdd) fallo al reservar memoria\n");
-			return -1;
-		}
-
-		bbdd->primero->id = strdup(id);
-		bbdd->primero->puerto = puerto;
-		bbdd->primero->ip = ip;
-		bbdd->primero->sgte = NULL;
+	struct node * new_node;
+	struct node * aux_node;
+	
+	new_node = (struct node *) malloc(sizeof(struct node));
+	if (new_node == NULL) {
+		fprintf(stderr, "(database) fail to allocate memory for the new node\n");
+		return -1;
 	}
-
-	/* Insertamos el registro en la primera posicion de la lista */
+	
+	new_node->id = strdup(id);
+	new_node->port = port;
+	new_node->ip = ip;
+	
+	/* Database is empty */
+	if (db->n_nodes == 0){
+		db->first = new_node;
+		db->first->next = NULL;
+		db->n_nodes++;
+	}
+	/* Insert in the first place */
 	else {
-		/* Si el registro ya existe, no lo insertamos */
-		aux = bbdd->primero;
-		while(aux) {
-			if (strcmp(aux->id, id) == 0)
-				return -2;
-			aux = aux->sgte;
+		/* check if is already in database */
+		aux_node = db->first;
+		while (aux_node) {
+			if (strcmp(aux_node->id, id) == 0){
+				free(new_node->id);
+				free(new_node);
+				return -1;
+			}
+			aux_node = aux_node->next;
 		}
-
-		nuevo = (struct nodo *) malloc(sizeof(struct nodo *));
-		if (nuevo == NULL) {
-			fprintf(stderr, "(bbdd) fallo al reservar memoria\n");
-			return -1;
-		}
-		nuevo->id = strdup(id);
-		nuevo->puerto = puerto;
-		nuevo->ip = ip;
-		nuevo->sgte = bbdd->primero;
-		bbdd->primero = nuevo;
+		
+		new_node->next = db->first;
+		db->first = new_node;
+		db->n_nodes++;
 	}
-	bbdd->nnodos++;
-
+	
 	return 0;
 }
 /******************************************************************************/
 /**
- * Consulta un registro en la base de datos.
- * @param id: identificador del registro.
- * @param puerto: puerto de la maquina que registro el registro, toma su valor al finalizar la funcion.
- * @param ip: direccion ip de la maquina que registro el registro, toma su valor al finalizar la funcion.
- * @return 0 si todo fue bien, -1 si no se encuentra el registro en la base de datos.
+ * Consult a record in the database.
+ * @param id: identifier of the record, take value after the call.
+ * @param port: client port, take value after the call.
+ * @param ip: client ip.
+ * @return 0 if everything is ok, -1 otherwise.
  */
-int consulta_registro(char * id, unsigned short * puerto, unsigned long * ip)
+int consult_record(char * id, unsigned short * port, unsigned long * ip)
 {
-	struct nodo * aux;
+	struct node * aux_node;
 
-	aux= bbdd->primero;
+	aux_node = db->first;
 
-	while(aux) {
-		if (strcmp(aux->id, id) == 0) {
-			*puerto = aux->puerto;
-			*ip = aux->ip;
+	while(aux_node) {
+		if (strcmp(aux_node->id, id) == 0) {
+			*port = aux_node->port;
+			*ip = aux_node->ip;
 			return 0;
 		}
-		aux = aux->sgte;
+		aux_node = aux_node->next;
 	}
 	return -1;
 
 }
 /******************************************************************************/
 /**
- * Elimina un registro en la base de datos.
- * @param id: identificador del registro.
- * @return 0 si todo fue bien, -1 si no se encuentra el registro en la base de datos.
+ * Delete a record of the database.
+ * @param id: identifier of the record.
+ * @return 0 if everything is ok, -1 otherwise.
  */
-int elimina_registro(char * id)
+int delete_record(char * id)
 {
-	struct nodo * aux, * ant;
+	struct node * aux_node; 
+	struct node * bef_node;
 
-	aux = ant = bbdd->primero;
-	while(aux) {
-		if (strcmp(aux->id, id) == 0) {
-			if (aux == bbdd->primero) {
-				bbdd->primero = bbdd->primero->sgte;
-				bbdd->nnodos--;
+	aux_node = bef_node = db->first;
+	while(aux_node) {
+		if (strcmp(aux_node->id, id) == 0) {
+			if (aux_node == db->first) {
+				db->first = db->first->next;
+				db->n_nodes--;
+				free(aux_node->id);
+				free(aux_node);
 				return 0;
 			}
 			else {
-				ant->sgte = aux->sgte;
-				bbdd->nnodos--;
+				bef_node->next = aux_node->next;
+				db->n_nodes--;
+				free(aux_node->id);
+				free(aux_node);
 				return 0;
 			}
 		}
-		ant = aux;
-		aux = aux->sgte;	
+		bef_node = aux_node;
+		aux_node = aux_node->next;	
 	}
 
 	return -1;
 }
 /******************************************************************************/
 /**
- * Imprime el contenido de la base de datos.
+ * Print the database.
  */
-void imprime_bbdd()
+void print_database()
 {
 	int i;
-	struct nodo * aux;
+	struct node * aux_node;
 	struct in_addr dir;
 
-	aux = bbdd->primero;
-	printf("Numero de nodos: %d\n", bbdd->nnodos);
-	while (aux) {
-		printf("\tid: %s\n", aux->id);
-		printf("\tpuerto: %d\n", aux->puerto);
-		dir.s_addr = aux->ip;
+	aux_node = db->first;
+	printf("Number of nodes: %d\n", db->n_nodes);
+	while (aux_node) {
+		printf("\tid: %s\n", aux_node->id);
+		printf("\tport: %d\n", aux_node->port);
+		dir.s_addr = aux_node->ip;
 		printf("\tip: %s\n\n", inet_ntoa(dir));
-		aux = aux->sgte;
+		aux_node = aux_node->next;
 	}
 }
 /******************************************************************************/
 /**
- * Remove the database, free the memory.
+ * Delete the database, free the memory.
  */
-int remove_bbdd()
+void delete_database()
 {
-	printf("Time to remove the db, bye!\n");
-	return 0;
+	struct node * to_delete;
+	struct node * aux_node;
+	int i;
+	
+	aux_node = db->first;
+	i = 0;
+	while (aux_node) {
+		i++;
+		to_delete = aux_node;
+		aux_node = aux_node->next;
+		free(to_delete->id);
+		free(to_delete);
+	}
+	
+	free(db);
+	printf("(database) deleted %d records\n", i);
 }
 
