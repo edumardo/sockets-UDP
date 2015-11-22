@@ -16,11 +16,11 @@ int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, in
 	int numbytes;
 
 	if ((numbytes =  sendto(sockfd, 
-													paquete, 
-													len, 
-													0, 
-													(struct sockaddr *) &server_addr,
-													sizeof(struct sockaddr))) == -1) {
+				paquete,
+				len,
+				0,
+				(struct sockaddr *) &server_addr,
+				sizeof(struct sockaddr))) == -1) {
 		perror("(common) sendto");
 		return -1;
 	}
@@ -44,11 +44,11 @@ char * recibe_paquete(int sockfd, struct sockaddr_in server_addr)
 	addr_len = sizeof(struct sockaddr);	
 
 	if ((numbytes = recvfrom(sockfd,
-													 buffer,
-													 MAXBUFLEN - 1,
-													 0,
-													 (struct sockaddr *) &server_addr,
-													 &addr_len)) == -1) {
+				 buffer,
+				 MAXBUFLEN - 1,
+				 0,
+				 (struct sockaddr *) &server_addr,
+				 &addr_len)) == -1) {
 		perror("(common) recvfrom");
 		return NULL;
 	}
