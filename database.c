@@ -81,17 +81,17 @@ int insert_record(char * id, unsigned short port, unsigned long ip)
  */
 int consult_record(char * id, unsigned short * port, unsigned long * ip)
 {
-	struct node * aux;
+	struct node * aux_node;
 
-	aux= db->first;
+	aux_node = db->first;
 
-	while(aux) {
-		if (strcmp(aux->id, id) == 0) {
-			*port = aux->port;
-			*ip = aux->ip;
+	while(aux_node) {
+		if (strcmp(aux_node->id, id) == 0) {
+			*port = aux_node->port;
+			*ip = aux_node->ip;
 			return 0;
 		}
-		aux = aux->next;
+		aux_node = aux_node->next;
 	}
 	return -1;
 
@@ -104,50 +104,51 @@ int consult_record(char * id, unsigned short * port, unsigned long * ip)
  */
 int delete_record(char * id)
 {
-	struct node * aux, * ant;
+	struct node * aux_node; 
+	struct node * bef_node;
 
-	aux = ant = db->first;
-	while(aux) {
-		if (strcmp(aux->id, id) == 0) {
-			if (aux == db->first) {
+	aux_node = bef_node = db->first;
+	while(aux_node) {
+		if (strcmp(aux_node->id, id) == 0) {
+			if (aux_node == db->first) {
 				db->first = db->first->next;
 				db->n_nodes--;
-				free(aux->id);
-				free(aux);
+				free(aux_node->id);
+				free(aux_node);
 				return 0;
 			}
 			else {
-				ant->next = aux->next;
+				bef_node->next = aux_node->next;
 				db->n_nodes--;
-				free(aux->id);
-				free(aux);
+				free(aux_node->id);
+				free(aux_node);
 				return 0;
 			}
 		}
-		ant = aux;
-		aux = aux->next;	
+		bef_node = aux_node;
+		aux_node = aux_node->next;	
 	}
 
 	return -1;
 }
 /******************************************************************************/
 /**
- * Print database.
+ * Print the database.
  */
 void print_database()
 {
 	int i;
-	struct node * aux;
+	struct node * aux_node;
 	struct in_addr dir;
 
-	aux = db->first;
+	aux_node = db->first;
 	printf("Number of nodes: %d\n", db->n_nodes);
-	while (aux) {
-		printf("\tid: %s\n", aux->id);
-		printf("\tport: %d\n", aux->port);
-		dir.s_addr = aux->ip;
+	while (aux_node) {
+		printf("\tid: %s\n", aux_node->id);
+		printf("\tport: %d\n", aux_node->port);
+		dir.s_addr = aux_node->ip;
 		printf("\tip: %s\n\n", inet_ntoa(dir));
-		aux = aux->next;
+		aux_node = aux_node->next;
 	}
 }
 /******************************************************************************/
@@ -157,15 +158,15 @@ void print_database()
 void delete_database()
 {
 	struct node * to_delete;
-	struct node * temp;
+	struct node * aux_node;
 	int i;
 	
-	temp = db->first;
+	aux_node = db->first;
 	i = 0;
-	while (temp) {
+	while (aux_node) {
 		i++;
-		to_delete = temp;
-		temp = temp->next;
+		to_delete = aux_node;
+		aux_node = aux_node->next;
 		free(to_delete->id);
 		free(to_delete);
 	}
