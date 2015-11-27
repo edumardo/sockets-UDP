@@ -19,19 +19,12 @@ struct node
 	unsigned long ip;
 };
 
-struct database /* old base_datos */
+struct database 
 {
 	int n_nodes;
 	struct node * first;
 };
 /******************************************************************************/
-/*int crea_bbdd();
-int inserta_registro(char * id, unsigned short puerto, unsigned long ip);
-int consulta_registro(char * id, unsigned short * puerto, unsigned long * ip);
-int elimina_registro(char * id);
-void imprime_bbdd();
-int remove_bbdd();*/
-
 int init_database();
 int insert_record(char * id, unsigned short port, unsigned long ip);
 int consult_record(char * id, unsigned short * port, unsigned long * ip);

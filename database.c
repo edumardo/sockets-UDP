@@ -174,4 +174,3 @@ void delete_database()
 	free(db);
 	printf("(database) deleted %d records\n", i);
 }
-
