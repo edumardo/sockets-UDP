@@ -22,6 +22,9 @@
 
 #define OP_OK 		0x00
 #define OP_KO		0x01
+
+#define VERBOSE		1
+#define NOVERBOSE	0
 /******************************************************************************/
 struct nuevo_registro	/* 1 + 1 + 2 + 4 + 256 = 264 bytes */
 {
@@ -47,7 +50,7 @@ struct resp_consulta	/* 1 + 1 + 2 + 4 = 8 bytes */
 	unsigned long ip;
 } __attribute__((packed));
 /******************************************************************************/
-int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, int len);
+int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, int len, int verbose);
 char * recibe_paquete(int sockfd, struct sockaddr_in server_addr);
 /******************************************************************************/
 #endif

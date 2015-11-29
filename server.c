@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 			resp.op = OP_KO;
 			strcpy(resp.mensaje, "Version del protocolo incorrecta");
 			len = sizeof(char) * 2 + strlen(resp.mensaje);
-			if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1)
+			if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
 				fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 
 			exit(1);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 					printf("(servidor) %s\n", resp.mensaje);				
 
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
-					if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					
 					break;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 				resp.version = VERSION;
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
-				if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 					strcpy(resp.mensaje, "El registro no existe");
 					printf("(servidor) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje);
-					if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 				
 					break;
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 				resp_con.puerto = htons(puerto);
 				resp_con.ip = htonl(ip);
 				len = sizeof(char) * 2 + sizeof(unsigned short) + sizeof(unsigned long);
-				if (envia_paquete(sockfd, cliente_addr, &resp_con, len) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp_con, len, NOVERBOSE) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 					strcpy(resp.mensaje, "El registro no existe");
 					printf("(servidor) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
-					if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 
 					break;
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
 				resp.version = VERSION;
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
-				if (envia_paquete(sockfd, cliente_addr, &resp, len) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}

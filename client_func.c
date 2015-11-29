@@ -28,7 +28,7 @@ int registra_registro(int sockfd, struct sockaddr_in server_addr, char * id)
 	
 	/* Enviamos una peticion de creacion de nuevo registro */
 	len = sizeof(char) * 2 + sizeof(unsigned short) + sizeof(unsigned long) + strlen(reg.id);
-	if (envia_paquete(sockfd, server_addr, &reg, len) == -1) {
+	if (envia_paquete(sockfd, server_addr, &reg, len, NOVERBOSE) == -1) {
 		fprintf(stderr, "(cliente) sendto");
 		return -1;
 	}
@@ -93,7 +93,7 @@ int elimina_registro(int sockfd, struct sockaddr_in server_addr, char * id)
 
 	/* Enviamos una peticion de consulta de registro */
 	len = sizeof(char) * 2 + strlen(elim_reg.mensaje);
-	if (envia_paquete(sockfd, server_addr, &elim_reg, len) == -1)	{
+	if (envia_paquete(sockfd, server_addr, &elim_reg, len, NOVERBOSE) == -1)	{
 		fprintf(stderr, "(cliente) sendto");
 		return -1;
 	}
@@ -163,7 +163,7 @@ int consulta_registro(int sockfd, struct sockaddr_in server_addr, char *id, unsi
 
 	/* Enviamos una peticion de eliminacion de registro */
 	len = sizeof(char) * 2 + strlen(consulta_reg.mensaje);
-	if (envia_paquete(sockfd, server_addr, &consulta_reg, len) == -1)	{
+	if (envia_paquete(sockfd, server_addr, &consulta_reg, len, NOVERBOSE) == -1)	{
 		fprintf(stderr, "(cliente) sendto");
 		return -1;
 	}

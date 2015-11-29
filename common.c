@@ -11,9 +11,17 @@
  * @return 0 si todo fue bien, -1 en caso contrario.
 */
 /******************************************************************************/
-int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, int len)
+int envia_paquete(int sockfd, struct sockaddr_in server_addr, void * paquete, int len, int verbose)
 {
 	int numbytes;
+
+	if (verbose){
+		printf("(common) envia_paquete: %d | %d | %d | %s\n",
+			   sockfd,
+			   server_addr.sin_family,
+			   ntohs(server_addr.sin_port),
+			   inet_ntoa(server_addr.sin_addr));
+	}
 
 	if ((numbytes =  sendto(sockfd, 
 				paquete,
