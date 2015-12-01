@@ -14,11 +14,11 @@ int main(int argc, char *argv[])
 
 	/* ./cient <ip-server> <operation> [id] */
 	if ((argc < 3) || (argc > 4)) {
-		printf("uso: cliente ip-servidor operacion id\n");
-		printf("operacion: \n");
-		printf("\t1 - Crear una nueva entrada en el registro\n");
-		printf("\t2 - Consultar una entrada del registro\n");
-		printf("\t3 - Eliminar una entrada del registro\n");
+		printf("Usage: ./%s <ip-server> <operation> [id]\n", argv[0]);
+		printf("operations: \n");
+		printf("\t1 - Create new record in the database\n");
+		printf("\t2 - Consult a record in the database\n");
+		printf("\t3 - Delete a record in the database\n");
 		exit(1);
 	}
 
@@ -99,11 +99,11 @@ int main(int argc, char *argv[])
 			break;
 		
 		default:
-			printf("uso: cliente ip-servidor operacion id\n");
-			printf("operacion: \n");
-			printf("\t1 - Crear una nueva entrada en el registro\n");
-			printf("\t2 - Consultar una entrada del registro\n");
-			printf("\t3 - Eliminar una entrada del registro\n");
+			printf("Usage: ./%s <ip-server> <operation> [id]\n", argv[0]);
+			printf("operations: \n");
+			printf("\t1 - Create new record in the database\n");
+			printf("\t2 - Consult a record in the database\n");
+			printf("\t3 - Delete a record in the database\n");
 			exit(1);
 		
 	}
