@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			break;
 		
 		default:
-			printf("Usage: ./%s <ip-server> <operation> [id]\n", argv[0]);
+			printf("Usage: %s <ip-server> <operation> [id]\n", argv[0]);
 			printf("operations: \n");
 			printf("\t1 - Create new record in the database\n");
 			printf("\t2 - Consult a record in the database\n");
