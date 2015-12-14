@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
 	/* Creamos la estructura de la base de datos */
 	if (init_database() == -1) {
-		fprintf(stderr, "(servidor) error al crear la base de datos");
+		fprintf(stderr, "(server) error al crear la base de datos");
 		exit(1);
 	}
 	
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	
 	/* Creamos el socket */
 	if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1) {
-		perror("(servidor) error al crear el socket");
+		perror("(server) error al crear el socket");
 		exit(1);
 	}
 
@@ -70,14 +70,14 @@ int main(int argc, char *argv[])
 
 	/* Asociamos el socket a la direccion del servidor */
 	if (bind(sockfd, (struct sockaddr *) &mi_addr, sizeof(struct sockaddr)) == -1) {
-		perror("(servidor) bind");
+		perror("(server) bind");
 		exit(1);
 	}
 	
 	addr_len = sizeof(struct sockaddr);
 
 	printf("-------------------------------------------------------------\n");
-	printf("(servidor) esperando conexiones de los clientes...\n");
+	printf("(server) esperando conexiones de los clientes...\n");
 
 	while(1) {
 		printf("-------------------------------------------------------------\n");
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 					0, 
 					(struct sockaddr *) &cliente_addr, 
 					&addr_len)) == -1) {
-			perror("(servidor) recvfrom");
+			perror("(server) recvfrom");
 			exit(1);
 		}
 		
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 			strcpy(resp.mensaje, "Version del protocolo incorrecta");
 			len = sizeof(char) * 2 + strlen(resp.mensaje);
 			if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
-				fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+				fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 
 			exit(1);
 		}
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 				nuevo_reg = (struct nuevo_registro *) buffer;
 				dir.s_addr = nuevo_reg->ip;
 				memset(&resp, 0, sizeof(struct respuesta));
-				printf("(servidor) Insertar nuevo registro en la base de datos\n");
+				printf("(server) Insertar nuevo registro en la base de datos\n");
 				printf("\t\tidentificador: %s\n\t\tpuerto: %d\n\t\tdireccion: %s\n\n", nuevo_reg->id, ntohs(nuevo_reg->puerto), inet_ntoa(dir));
 
 				if ((status = insert_record(nuevo_reg->id, ntohs(nuevo_reg->puerto), nuevo_reg->ip)) != 0) {
@@ -131,11 +131,11 @@ int main(int argc, char *argv[])
 					else
 						strcpy(resp.mensaje, "El registro ya existe en la base de datos");
 
-					printf("(servidor) %s\n", resp.mensaje);				
+					printf("(server) %s\n", resp.mensaje);				
 
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
 					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
-						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+						fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 					
 					break;
 				}
@@ -144,27 +144,27 @@ int main(int argc, char *argv[])
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
 				if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1) {
-					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+					fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
-				printf("(servidor) insercion realizada con exito\n");
+				printf("(server) insercion realizada con exito\n");
 				break;
 
 			/* Consulta registro */
 			case OP_CONSULTA_REG:
 				consulta_reg = (struct respuesta *) buffer;
 				memset(&resp, 0, sizeof(struct respuesta));
-				printf("(servidor) Consultar registro de la base de datos\n");
+				printf("(server) Consultar registro de la base de datos\n");
 				printf("\t\tidentificador: %s\n\n", consulta_reg->mensaje);
 
 				if (consult_record(consulta_reg->mensaje, &puerto, &ip) == -1) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
 					strcpy(resp.mensaje, "El registro no existe");
-					printf("(servidor) %s\n", resp.mensaje);
+					printf("(server) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje);
 					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
-						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+						fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 				
 					break;
 				}
@@ -175,10 +175,10 @@ int main(int argc, char *argv[])
 				resp_con.ip = htonl(ip);
 				len = sizeof(char) * 2 + sizeof(unsigned short) + sizeof(unsigned long);
 				if (envia_paquete(sockfd, cliente_addr, &resp_con, len, server_mode) == -1) {
-					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+					fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
-				printf("(servidor) consulta realizada con exito\n");
+				printf("(server) consulta realizada con exito\n");
 				break;
 
 			/* Elimina registro */
@@ -186,17 +186,17 @@ int main(int argc, char *argv[])
 				elim_reg = (struct respuesta *) buffer;
 				memset(&resp, 0, sizeof(struct respuesta));
 
-				printf("(servidor) Eliminar registro de la base de datos\n");
+				printf("(server) Eliminar registro de la base de datos\n");
 				printf("\t\tidentificador: %s\n\n", elim_reg->mensaje);
 
 				if (delete_record(elim_reg->mensaje) == -1) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
 					strcpy(resp.mensaje, "El registro no existe");
-					printf("(servidor) %s\n", resp.mensaje);
+					printf("(server) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
 					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
-						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+						fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 
 					break;
 				}
@@ -205,14 +205,14 @@ int main(int argc, char *argv[])
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
 				if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1) {
-					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
+					fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
-				printf("(servidor) eliminacion realizada con exito\n");
+				printf("(server) eliminacion realizada con exito\n");
 				break;
 		
 			default:
-				printf("(servidor) operacion no soportada, adios\n");
+				printf("(server) operacion no soportada, adios\n");
 				exit(1);
 		}
 	}
