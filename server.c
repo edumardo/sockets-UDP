@@ -28,6 +28,24 @@ int main(int argc, char *argv[])
 	int status;
 	unsigned short puerto;
 	unsigned long ip;
+	int server_mode;
+
+	/* By default noverbose mode */
+	server_mode = NOVERBOSE;
+
+	/* command line options */
+	if (argc > 2){
+		printf("Usage: %s [v]\n", argv[0]);
+		printf("\tnormal mode: %s\n", argv[0]);
+		printf("\tverbose mode: %s v\n", argv[0]);
+		exit(1);
+	}
+	else {
+		if ((argc == 2) && (argv[1][0] == 'v')){
+			server_mode = VERBOSE;
+			printf("(server) verbose mode...\n");
+		}
+	}
 
 	/* Creamos la estructura de la base de datos */
 	if (init_database() == -1) {
@@ -86,7 +104,7 @@ int main(int argc, char *argv[])
 			resp.op = OP_KO;
 			strcpy(resp.mensaje, "Version del protocolo incorrecta");
 			len = sizeof(char) * 2 + strlen(resp.mensaje);
-			if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
+			if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 				fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 
 			exit(1);
@@ -116,7 +134,7 @@ int main(int argc, char *argv[])
 					printf("(servidor) %s\n", resp.mensaje);				
 
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
-					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					
 					break;
@@ -125,7 +143,7 @@ int main(int argc, char *argv[])
 				resp.version = VERSION;
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
-				if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
@@ -145,7 +163,7 @@ int main(int argc, char *argv[])
 					strcpy(resp.mensaje, "El registro no existe");
 					printf("(servidor) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje);
-					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 				
 					break;
@@ -156,7 +174,7 @@ int main(int argc, char *argv[])
 				resp_con.puerto = htons(puerto);
 				resp_con.ip = htonl(ip);
 				len = sizeof(char) * 2 + sizeof(unsigned short) + sizeof(unsigned long);
-				if (envia_paquete(sockfd, cliente_addr, &resp_con, len, NOVERBOSE) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp_con, len, server_mode) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
@@ -177,7 +195,7 @@ int main(int argc, char *argv[])
 					strcpy(resp.mensaje, "El registro no existe");
 					printf("(servidor) %s\n", resp.mensaje);
 					len = sizeof(char) * 2 + strlen(resp.mensaje); 
-					if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1)
+					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 						fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 
 					break;
@@ -186,7 +204,7 @@ int main(int argc, char *argv[])
 				resp.version = VERSION;
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
-				if (envia_paquete(sockfd, cliente_addr, &resp, len, NOVERBOSE) == -1) {
+				if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1) {
 					fprintf(stderr, "(servidor) fallo al enviar la respuesta al cliente\n");
 					break;
 				}
