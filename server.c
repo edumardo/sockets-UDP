@@ -9,18 +9,18 @@
 int main(int argc, char *argv[])
 {
 	int sockfd;
-	struct sockaddr_in mi_addr; 
+	struct sockaddr_in mi_addr;
 	struct sockaddr_in cliente_addr;
 	socklen_t addr_len;
 
-	struct respuesta * paquete;			/* paquete generico que recibe el servidor */
-	struct respuesta resp;				/* paquete de respuesta */
+	struct respuesta * paquete;		/* paquete generico que recibe el servidor */
+	struct respuesta resp;			/* paquete de respuesta */
 	struct respuesta * elim_reg;		/* paquete de elimina registro */
 	struct nuevo_registro * nuevo_reg;	/* paquete de nuevo registro */
 	struct respuesta * consulta_reg;	/* paquete de consulta registro */
 	struct resp_consulta resp_con;		/* respuesta a consulta registro */
 
-	struct in_addr dir;					/* Para pasar ip de ulong a formato punto */
+	struct in_addr dir;			/* Para pasar ip de ulong a formato punto */
 
 	char buffer[MAXBUFLEN];
 	int numbytes;
@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "(server) error al crear la base de datos");
 		exit(1);
 	}
-	
+
 	/* catch SIGINT signal to avoid exit without free memory */
 	signal(SIGINT, end_server);
-	
+
 	/* Creamos el socket */
 	if ((sockfd = socket(PF_INET, SOCK_DGRAM, 0)) == -1) {
 		perror("(server) error al crear el socket");
@@ -63,17 +63,17 @@ int main(int argc, char *argv[])
 	}
 
 	/* puerto e ip del servidor */
-	mi_addr.sin_family = AF_INET;         
-	mi_addr.sin_port = htons(PORT_SERVER);       
-	mi_addr.sin_addr.s_addr = INADDR_ANY; 
-	memset(&(mi_addr.sin_zero), '\0', 8); 
+	mi_addr.sin_family = AF_INET;
+	mi_addr.sin_port = htons(PORT_SERVER);
+	mi_addr.sin_addr.s_addr = INADDR_ANY;
+	memset(&(mi_addr.sin_zero), '\0', 8);
 
 	/* Asociamos el socket a la direccion del servidor */
 	if (bind(sockfd, (struct sockaddr *) &mi_addr, sizeof(struct sockaddr)) == -1) {
 		perror("(server) bind");
 		exit(1);
 	}
-	
+
 	addr_len = sizeof(struct sockaddr);
 
 	printf("-------------------------------------------------------------\n");
@@ -86,16 +86,16 @@ int main(int argc, char *argv[])
 		memset(&resp_con, 0, sizeof(struct resp_consulta));
 
 		/* Recibimos un paquete del cliente */
-		if ((numbytes = recvfrom(sockfd, 
-					buffer, 
-					MAXBUFLEN-1, 
-					0, 
-					(struct sockaddr *) &cliente_addr, 
+		if ((numbytes = recvfrom(sockfd,
+					buffer,
+					MAXBUFLEN-1,
+					0,
+					(struct sockaddr *) &cliente_addr,
 					&addr_len)) == -1) {
 			perror("(server) recvfrom");
 			exit(1);
 		}
-		
+
 		paquete = (struct respuesta *) buffer;
 
 		/* Comprobamos la version del protocolo de cada paquete que recibimos */
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
 		/* Que operacion va a realizar el servidor */
 		switch(paquete->op) {
-			
+
 			/* Nuevo registro */
 			case OP_NUEVO_REG:
 
@@ -125,18 +125,18 @@ int main(int argc, char *argv[])
 				if ((status = insert_record(nuevo_reg->id, ntohs(nuevo_reg->puerto), nuevo_reg->ip)) != 0) {
 					resp.version = VERSION;
 					resp.op = OP_KO;
-				
+
 					if (status == -1)
 						strcpy(resp.mensaje, "Error en la base de datos, no se insertó el elemento");
 					else
 						strcpy(resp.mensaje, "El registro ya existe en la base de datos");
 
-					printf("(server) %s\n", resp.mensaje);				
+					printf("(server) %s\n", resp.mensaje);
 
-					len = sizeof(char) * 2 + strlen(resp.mensaje); 
+					len = sizeof(char) * 2 + strlen(resp.mensaje);
 					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 						fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
-					
+
 					break;
 				}
 
@@ -165,7 +165,6 @@ int main(int argc, char *argv[])
 					len = sizeof(char) * 2 + strlen(resp.mensaje);
 					if (envia_paquete(sockfd, cliente_addr, &resp, len, server_mode) == -1)
 						fprintf(stderr, "(server) fallo al enviar la respuesta al cliente\n");
-				
 					break;
 				}
 
@@ -200,7 +199,7 @@ int main(int argc, char *argv[])
 
 					break;
 				}
-				
+
 				resp.version = VERSION;
 				resp.op = OP_OK;
 				len = sizeof(char) * 2;
@@ -210,7 +209,7 @@ int main(int argc, char *argv[])
 				}
 				printf("(server) eliminacion realizada con exito\n");
 				break;
-		
+
 			default:
 				printf("(server) operacion no soportada, adios\n");
 				exit(1);
