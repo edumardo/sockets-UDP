@@ -23,7 +23,7 @@ int registra_registro(int sockfd, struct sockaddr_in server_addr, char * id)
 	reg.version = VERSION;
 	reg.op = OP_NUEVO_REG;
 	reg.puerto = htons(PORT_CLIENTE);
-	/*reg.ip = inet_addr(getmyip());*/
+	reg.ip = inet_addr(getmyip());
 	strcpy(reg.id, id);
 	
 	/* Enviamos una peticion de creacion de nuevo registro */
